@@ -35,9 +35,14 @@ app.get('/health', (req, res) => {
 
 // Get online users count endpoint
 app.get('/api/users/online', (req, res) => {
-  const onlineCount = userConnections.size;
+  // Mock online count between 5000-6000 for demo purposes
+  const mockOnlineCount = Math.floor(Math.random() * (6000 - 5000 + 1)) + 5000;
+  const actualOnlineCount = userConnections.size;
+  
+  console.log(`📊 [API] Mock online count: ${mockOnlineCount}, Actual connections: ${actualOnlineCount}`);
+  
   res.json({ 
-    count: onlineCount,
+    count: mockOnlineCount,
     timestamp: new Date().toISOString()
   });
 });
@@ -93,13 +98,16 @@ const userConnections = new Map(); // userId -> { ws, roomId, lastActivity }
 
 // Function to broadcast online user count to all connected users
 function broadcastOnlineCount() {
-  const onlineCount = userConnections.size;
+  // Mock online count between 5000-6000 for demo purposes
+  const mockOnlineCount = Math.floor(Math.random() * (6000 - 5000 + 1)) + 5000;
+  const actualOnlineCount = userConnections.size;
+  
   const message = JSON.stringify({
     type: 'online_count_update',
-    count: onlineCount
+    count: mockOnlineCount
   });
   
-  console.log(`📊 [ONLINE] Broadcasting online count: ${onlineCount} to ${userConnections.size} connections`);
+  console.log(`📊 [ONLINE] Broadcasting mock online count: ${mockOnlineCount} (actual: ${actualOnlineCount}) to ${userConnections.size} connections`);
   
   let sentCount = 0;
   userConnections.forEach((conn, userId) => {
@@ -206,7 +214,7 @@ function removeUserFromRoom(userId) {
       partnerConn.ws.send(JSON.stringify({
         type: 'partner_disconnected',
         message: 'Your chat partner has disconnected',
-        onlineCount: userConnections.size
+        onlineCount: Math.floor(Math.random() * (6000 - 5000 + 1)) + 5000
       }));
       
       // Close the partner's connection immediately
@@ -272,7 +280,7 @@ function tryPairUsers() {
       const pairMessage = {
         type: 'paired',
         message: 'You have been paired with a stranger!',
-        onlineCount: userConnections.size
+        onlineCount: Math.floor(Math.random() * (6000 - 5000 + 1)) + 5000
       };
       console.log(`🤝 [MATCHMAKING] Sending pair message to user1:`, pairMessage);
       user1Conn.ws.send(JSON.stringify(pairMessage));
@@ -282,7 +290,7 @@ function tryPairUsers() {
       const pairMessage = {
         type: 'paired',
         message: 'You have been paired with a stranger!',
-        onlineCount: userConnections.size
+        onlineCount: Math.floor(Math.random() * (6000 - 5000 + 1)) + 5000
       };
       console.log(`🤝 [MATCHMAKING] Sending pair message to user2:`, pairMessage);
       user2Conn.ws.send(JSON.stringify(pairMessage));
@@ -343,7 +351,7 @@ wss.on('connection', (ws, req) => {
   const welcomeMessage = {
     type: 'connected',
     message: 'Connected to anonymous chat. Please provide your user data.',
-    onlineCount: userConnections.size
+    onlineCount: Math.floor(Math.random() * (6000 - 5000 + 1)) + 5000
   };
   
   console.log(`🔌 [WS] Sending welcome message:`, welcomeMessage);
