@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: anonymous-chat-backend
+    env: node
+    plan: free
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: FRONTEND_URL
+        fromService:
+          type: web
+          name: anonymous-chat-frontend
+          property: host
