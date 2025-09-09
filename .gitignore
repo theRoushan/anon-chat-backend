@@ -4,3 +4,6 @@ node_modules/
 .DS_Store
 dist/
 build/
+# Firebase service account keys
+*-firebase-adminsdk-*.json
+firebase-adminsdk-*.json
